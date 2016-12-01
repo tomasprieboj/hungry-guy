@@ -3,11 +3,11 @@
 
 include ( 'LunchExtractor.php' );
 
-$extractor = new LunchExtractor();
-$content = $extractor->getBatidaMenu( 'http://www.batida.sk/index.php/ct-menu-item-3' );
+$extractor = LunchExtractor::getInstance();
+$batidaContent = $extractor->getBatidaMenu( 'http://www.batida.sk/index.php/ct-menu-item-3' );
 
 ?>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta id="viewportMeta" name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
@@ -18,7 +18,7 @@ $content = $extractor->getBatidaMenu( 'http://www.batida.sk/index.php/ct-menu-it
 	
 	
     <meta charset="utf-8">
-<title>Net wage calculator</title>
+<title>Menu Extractor</title>
 </head>
 <body>
 	<div class="container">
@@ -26,7 +26,9 @@ $content = $extractor->getBatidaMenu( 'http://www.batida.sk/index.php/ct-menu-it
 	
 	<p>
 		<?php
-		var_dump($content);
+		echo "BATIDA<br>";
+		var_dump($batidaContent);
+
 		//echo count( $returned_content->childNodes );
 		?>
 	</p>

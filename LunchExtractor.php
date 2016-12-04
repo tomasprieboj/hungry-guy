@@ -27,6 +27,7 @@ class LunchExtractor{
 		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 		
 		$page = curl_exec ($ch);
+
 		/*
 		for not logging Invalid nav tag
 		*/
@@ -100,6 +101,55 @@ class LunchExtractor{
 	}
 
 	public function getDelfinMenu( $url ){
+
+		$menuArr = array();
+		$isReadyToExtract = false;
+		$currentDayMonth = date("j.m.Y");
+
+		$dom = $this->getPageContent( $url );
+		/*
+		we need elements by its class so we use XPath
+		*/
+		$finder = new DomXPath( $dom );
+		$nodes = $finder->query( "//div[contains(concat(' ', normalize-space(@class), ' '), ' post ')] ");
+		$currentDayNode;
+		$index = 0;
+
+		foreach( $nodes as $node ){
+			$header = $node->getElementsByTagName('h2')->item(0);
+			$headValue = $header->nodeValue;
+			$headArr = explode( ' ', $headValue );
+			/*
+			we found our day
+			*/
+			if( strcmp( $headArr[1], $currentDayMonth ) === 0 ){
+				$ps = $node->getElementsByTagName('p');
+				/*
+				6th is price
+				*/
+				$menuArr = $this->convertPsToArr( $ps ,$headArr[5]);
+	
+				break;
+			}
+			
+		}
+		
+		return $menuArr;
+		
+	}
+
+	private function convertPsToArr( $ps, $price ){
+
+		$retArr = array();
+		$i = 0;
+		foreach( $ps as $p ){
+			$retArr[$i++] = array(
+					"name" => $p->nodeValue,
+					"price" => $price
+				);
+		}
+
+		return $retArr;
 
 	}
 

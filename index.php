@@ -5,6 +5,8 @@ include ( 'LunchExtractor.php' );
 
 $extractor = LunchExtractor::getInstance();
 $batidaContent = $extractor->getBatidaMenu( 'http://www.batida.sk/index.php/ct-menu-item-3' );
+$delfinContent = $extractor->getDelfinMenu( 'http://restauraciadelfin.sk/denne-menu-ruzinov/' );
+
 
 ?>
 <!DOCTYPE html>
@@ -28,6 +30,8 @@ $batidaContent = $extractor->getBatidaMenu( 'http://www.batida.sk/index.php/ct-m
 		<?php
 		echo "BATIDA<br>";
 		var_dump($batidaContent);
+		echo "<br>DELFIN<br>";
+		var_dump($delfinContent);
 
 		//echo count( $returned_content->childNodes );
 		?>

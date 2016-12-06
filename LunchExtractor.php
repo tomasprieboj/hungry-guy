@@ -166,7 +166,8 @@ final class LunchExtractor{
 		$counter = 0;
 		$currentDayMonth = date("d.M Y");
 		/*
-		array shwould contain 2 values
+		rawArr contains html tags
+		array should contain 2 values
 		1: soup
 		2: main courses (not parsed)
 		*/
@@ -225,7 +226,6 @@ final class LunchExtractor{
 			are separated by TAB character ffs
 			*/
 			$spaceSplitArr = explode( '	',  $srippedElem );
-			echo $spaceSplitArr[1] . "<br>";
 
 			$retArr[] = array(
 				"name" => $spaceSplitArr[0],
@@ -238,11 +238,118 @@ final class LunchExtractor{
 	}
 
 	public function getBazantMenu( $url ){
-		//TODO
+
+		$menuArr = array();
+		$defaultPrice = "3.80€";
+
+		$dom = self::getPageContent( $url );
+		$menuWrapper = $dom->getElementById('right-ornament');
+
+		
+		foreach( $menuWrapper->childNodes as $child ){
+			/*
+			TODO
+			!!! make it with tag name 
+			!! daily menu
+			?!! price
+			*/
+		
+			$childsLength = $child->childNodes->length;
+			if( strcmp( $child->nodeName, 'div' ) === 0 &&
+				$childsLength > 1 && 	//first div has no children so we ignore it
+				$childsLength < 18 		//second div has info about daily menus 
+				){
+					
+				$menuArr = self::getCorrectDayArr( $child->childNodes , $defaultPrice);
+				
+			}
+			
+		}
+
+				var_dump($menuArr);
+		return $menuArr;
 	}
 
-	public function getMlynMenu( $url ){
-		//TODO
+	private function getCorrectDayArr( $divsChilds, $defaultPrice ){
+
+		$retArr = array();
+		$currentDayMonth = date("j.m.Y");
+		$soupString = "";
+		$soupStringcounter = 0;
+		$correctArrElem;
+
+		
+		foreach( $divsChilds as $child ){
+			/*
+			searching for correct date
+			*/
+			if( strcmp( $child->nodeName, 'h4' ) === 0){
+				$spaceExp = explode( ' ', $child->nodeValue );
+				$extractedDate = preg_replace('/\s+/', '', $spaceExp[1]);//demove new line character
+				/*
+				this is not our day
+				*/
+				if( strcmp( $extractedDate, $currentDayMonth) !== 0){
+					break;
+				} 
+			}
+			/*
+			extracting soup
+			*/
+			if( strcmp( $child->nodeName, 'p' ) === 0 &&
+				$soupStringcounter < 2){//we only care about soup
+
+				$soupString .= $child->nodeValue;
+				$soupStringcounter++;
+			}
+
+			
+			if( strcmp( $child->nodeName, 'ol' ) === 0){
+				$lis = $child->getElementsByTagName('li');
+				foreach( $lis as $li ){
+					/*
+					some menus are more expensive and menu string 
+					contains dash or endash omg
+					*/
+					$moreExCheckDash = explode( '-', $li->nodeValue );
+					$moreExCheckENDash = explode( '–', $li->nodeValue );
+
+					if(count($moreExCheckENDash) > 1){
+						$correctArrElem = self::getCorrectArrElem( $moreExCheckENDash, $defaultPrice );
+					}else if(count($moreExCheckDash) > 1){
+						$correctArrElem = self::getCorrectArrElem( $moreExCheckDash, $defaultPrice );
+					}else{
+						//it is just a string so make it array with one elem
+						$correctArrElem = self::getCorrectArrElem( array($li->nodeValue ), $defaultPrice );
+					}
+					
+					$retArr[] = $correctArrElem;
+					var_dump($correctArrElem);
+					
+				}
+						
+			}
+
+		}
+
+		return $retArr;
+	}
+
+	function getCorrectArrElem( $menuItemArr, $defaultPrice ){
+		$len = count( $menuItemArr );
+
+		if( $len < 2 ){
+
+			return array(
+				"name" => $menuItemArr[0],
+				"price" => $defaultPrice
+			);
+		}
+
+		return array(
+			"name" => $menuItemArr[0],
+			"price" => $menuItemArr[1]
+		);
 	}
 
 }

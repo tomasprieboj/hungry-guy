@@ -236,41 +236,80 @@ final class LunchExtractor{
 		return $retArr;
 
 	}
-
+	/*
+	function returns formated data Extracted from http://www.uzlatehobazanta.sk/denne-menu/
+	menus prices does not contains prices (only empty strings)
+	*/
 	public function getBazantMenu( $url ){
 
 		$menuArr = array();
-		$defaultPrice = "3.80€";
+		$dailyMenuArr = array();
 
 		$dom = self::getPageContent( $url );
 		$menuWrapper = $dom->getElementById('right-ornament');
-
+		$divs = $menuWrapper->getElementsByTagName('div');
 		
-		foreach( $menuWrapper->childNodes as $child ){
+		foreach( $divs as $div ){
+			$childsLength = $div->childNodes->length;
 			/*
-			TODO
-			!!! make it with tag name 
-			!! daily menu
-			?!! price
+			daily menu has the most child elements (it looks like 18)
 			*/
-		
-			$childsLength = $child->childNodes->length;
-			if( strcmp( $child->nodeName, 'div' ) === 0 &&
-				$childsLength > 1 && 	//first div has no children so we ignore it
-				$childsLength < 18 		//second div has info about daily menus 
+			if( $childsLength > 15){
+				
+				$dailyMenuArr = self::getCorrectDailyArr( $div->childNodes );
+			}
+
+			if( $childsLength > 1 && 	/*first div has no children so we ignore it*/
+				$childsLength < 18 		/*second div has info about daily menus */
 				){
-					
-				$menuArr = self::getCorrectDayArr( $child->childNodes , $defaultPrice);
+
+				$menuArr = self::getCorrectDayArr( $div->childNodes );
+				/*
+				if returned array is not empty we found our day
+				*/
+				if( count( $menuArr ) !== 0 ){
+					break;
+				}
 				
 			}
-			
+
 		}
 
-				var_dump($menuArr);
-		return $menuArr;
+		return array_merge( $dailyMenuArr, $menuArr );
 	}
 
-	private function getCorrectDayArr( $divsChilds, $defaultPrice ){
+	/*
+	function returns array of daily menu and information about prices
+	*/
+	private function getCorrectDailyArr( $divsChilds ){
+
+		$retArr = array();
+		
+		foreach( $divsChilds as $child ){
+			if( strcmp( $child->nodeName, 'h4' ) === 0){
+				$retArr[] = array(
+						"name" => $child->nodeValue,
+						"price" => ""
+					);
+			}
+
+			if( strcmp( $child->nodeName, 'ol' ) === 0 ){
+				$lis = $child->getElementsByTagName('li');
+				foreach( $lis as $li ){
+					$retArr[] = array(
+						"name" => $li->nodeValue,
+						"price" => ""
+					);
+				}
+
+				break;
+			}
+		}
+
+		return $retArr;
+	}
+
+	private function getCorrectDayArr( $divsChilds ){
 
 		$retArr = array();
 		$currentDayMonth = date("j.m.Y");
@@ -315,16 +354,16 @@ final class LunchExtractor{
 					$moreExCheckENDash = explode( '–', $li->nodeValue );
 
 					if(count($moreExCheckENDash) > 1){
-						$correctArrElem = self::getCorrectArrElem( $moreExCheckENDash, $defaultPrice );
+						$correctArrElem = self::getCorrectArrElem( $moreExCheckENDash );
 					}else if(count($moreExCheckDash) > 1){
-						$correctArrElem = self::getCorrectArrElem( $moreExCheckDash, $defaultPrice );
+						$correctArrElem = self::getCorrectArrElem( $moreExCheckDash );
 					}else{
 						//it is just a string so make it array with one elem
-						$correctArrElem = self::getCorrectArrElem( array($li->nodeValue ), $defaultPrice );
+						$correctArrElem = self::getCorrectArrElem( array($li->nodeValue ) );
 					}
 					
 					$retArr[] = $correctArrElem;
-					var_dump($correctArrElem);
+					//var_dump($correctArrElem);
 					
 				}
 						
@@ -335,14 +374,14 @@ final class LunchExtractor{
 		return $retArr;
 	}
 
-	function getCorrectArrElem( $menuItemArr, $defaultPrice ){
+	function getCorrectArrElem( $menuItemArr ){
 		$len = count( $menuItemArr );
 
 		if( $len < 2 ){
 
 			return array(
 				"name" => $menuItemArr[0],
-				"price" => $defaultPrice
+				"price" => ""
 			);
 		}
 

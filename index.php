@@ -7,7 +7,7 @@ $extractor = LunchExtractor::getInstance();
 $batidaContent = $extractor->getBatidaMenu( 'http://www.batida.sk/index.php/ct-menu-item-3' );
 $delfinContent = $extractor->getDelfinMenu( 'http://restauraciadelfin.sk/denne-menu-ruzinov/' );
 $ruzaContent = $extractor->getRuzaMenu( 'http://budvarpuburuzi.sk/obedove-menu/' );
-//$bazantContent = $extractor->getBazantMenu( 'http://www.uzlatehobazanta.sk/denne-menu/' );
+$bazantContent = $extractor->getBazantMenu( 'http://www.uzlatehobazanta.sk/denne-menu/' );
 
 
 ?>
@@ -31,15 +31,25 @@ $ruzaContent = $extractor->getRuzaMenu( 'http://budvarpuburuzi.sk/obedove-menu/'
 	<p>
 		<?php
 		echo "<img src='./images/batidaText.png' alt='batida restaurant text'><br>";
-		var_dump($batidaContent);
-		echo "<br><img src='./images/delfinLogo.png' alt='delfin restaurant logo'><br>";
-		var_dump($delfinContent);
-		echo "<br><img src='./images/ruzaLogo.png' alt='ruza restaurant logo'><br>";
-		var_dump($ruzaContent);	
-		echo "<br><img src='./images/bazantLogo.png' alt='bazant restaurant logo'><br>";
-		var_dump($bazantContent);	
+		foreach( $batidaContent as $item ){
+			echo $item['name'] . " " . $item['price'] . "<br>";
+		}
 
-		//echo count( $returned_content->childNodes );
+		echo "<br><img src='./images/delfinLogo.png' alt='delfin restaurant logo'><br>";
+		foreach( $delfinContent as $item ){
+			echo $item['name'] . " " . $item['price'] . "<br>";
+		}
+	
+		echo "<br><img src='./images/ruzaLogo.png' alt='ruza restaurant logo'><br>";
+		foreach( $ruzaContent as $item ){
+			echo $item['name'] . " " . $item['price'] . "<br>";
+		}
+	
+		echo "<br><img src='./images/bazantLogo.png' alt='bazant restaurant logo'><br>";
+		foreach( $bazantContent as $item ){
+			echo $item['name'] . " " . $item['price'] . "<br>";
+		}
+
 		?>
 	</p>
 	</div>

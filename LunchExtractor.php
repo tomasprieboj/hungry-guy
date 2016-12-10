@@ -41,25 +41,28 @@ final class LunchExtractor{
 
 		return $dom;
 	}
+
 	/*
 	!!! this function may not be needed
 	*/
-	private function correctShortDate( $dateStr ){
+	/*private function correctShortDate( $dateStr ){
 		
 		if( strlen( $dateStr ) > 5 || strlen( $dateStr )  <= 2)
 			return $dateStr;
 
 		$dateArr = explode( '.', $dateStr );
-		/*
-		if days are short for example: 1 => 01
-		*/
+		
+		//if days are short for example: 1 => 01
+		
 		if( strlen($dateArr[0]) < 2  )
 			$dateArr[0] = "0" . $dateArr[0];
 		if( strlen($dateArr[1]) < 2 )
 			$dateArr[1] = "0" . $dateArr[1];
 
 		return implode( '.', $dateArr);
-	}
+	}*/
+
+
 	/*
 	need to correct dates leading zero
 	*/
@@ -67,21 +70,21 @@ final class LunchExtractor{
 
 		$menuArr = array();
 		$isReadyToExtract = false;
-		$currentDayMonth = date("d.m.");
+		$currentDayMonth = date("j.m.");
 
 		$dom = self::getPageContent( $url );
 		$tBody = $dom->getElementsByTagName( 'tbody' )->item(0);
 		$trs = $tBody->getElementsByTagName( 'tr' );
 		
 		$i = 0;
+
 		foreach ( $trs as $tr ) {
 			$tds = $tr->getElementsByTagName('td');
 			/*
 			remove whitespaces
 			*/
 			$trDate = preg_replace('/\s+/', '', $tds->item(0)->nodeValue );
-			$trDate = self::correctShortDate( $trDate );
-
+			//$trDate = self::correctShortDate( $trDate );
 
 			if( strcmp( $trDate, $currentDayMonth ) === 0 ){
 				$isReadyToExtract = true;
@@ -126,6 +129,8 @@ final class LunchExtractor{
 			$header = $node->getElementsByTagName('h2')->item(0);
 			$headValue = $header->nodeValue;
 			$headArr = explode( ' ', $headValue );
+			
+			$menuDayMonth = $headArr[1];
 			/*
 			we found our day
 			*/
@@ -148,16 +153,59 @@ final class LunchExtractor{
 	private function convertPsToArr( $ps, $price ){
 
 		$retArr = array();
+		$correctPrice;
 		$i = 0;
+		$len = $ps->length;
+
 		foreach( $ps as $p ){
+			/*
+			soup is firs paragraph
+			*/
+			if( $i === 0 ){
+				$correctPrice = "Free";
+			/*
+			last paragraph is special and more expensive menu
+			*/
+			}else if( $i === ($len - 1) ){
+				$correctPrice = self::getSpecialPrice( $p->nodeValue );
+			}else{
+				$correctPrice = $price;
+			}
+
 			$retArr[$i++] = array(
-					"name" => $p->nodeValue,
-					"price" => $price
+					"name" => self::getCorrectMenuName( $p->nodeValue ),
+					"price" => $correctPrice
 				);
 		}
 
 		return $retArr;
 
+	}
+	/*
+	function extracts price from special menu
+	*/
+	private function getSpecialPrice( $menuStr ){
+
+		$parts = explode( ' ', $menuStr );
+		$partsLen = count($parts);
+
+		return $parts[ $partsLen - 1 ];
+	}
+	/*
+	function returns correct form of menu string
+	as special menu contains price, we need to cutt it off the string
+	*/
+	private function getCorrectMenuName( $menuStr ){
+		$parts = explode( '€', $menuStr );
+		/*
+		only special menu contains price
+		*/
+		if( count( $parts ) > 0 ){
+			$parts = implode( ' ', explode( ' ', $menuStr , -1 ) );
+			return $parts;
+		}
+
+		return $menuStr;
 	}
 
 	public function getRuzaMenu( $url ){
@@ -182,7 +230,7 @@ final class LunchExtractor{
 			
 			if( strcmp( $child->nodeName, 'h5' ) === 0 && 
 				strcmp( $child->nodeValue, $currentDayMonth ) === 0){
-
+					
 				$isCurrentDay = true;
 			}
 			/*
@@ -252,7 +300,7 @@ final class LunchExtractor{
 		foreach( $divs as $div ){
 			$childsLength = $div->childNodes->length;
 			/*
-			daily menu has the most child elements (it looks like 18)
+			daily menu has the most child elements (it looks like it is 18)
 			*/
 			if( $childsLength > 15){
 				
@@ -274,7 +322,11 @@ final class LunchExtractor{
 			}
 
 		}
-
+		/*
+		we merge arrays where 
+		first is daily menu
+		second is current day menu
+		*/
 		return array_merge( $dailyMenuArr, $menuArr );
 	}
 

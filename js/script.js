@@ -1,119 +1,68 @@
 
-var netWageCalculator = (function(){
+var HungryGuy = (function(){
 	'use strict';
 
-	var $myBtn;
-	var $workHoursInput;
-	var $eurPerHourInput;
-	var $resultArea;
-	var netWage;
-	var wageCalculated;
-	
-	
+	var menuData;
+	var templates;
 
 	var init = function(){
-
-		_domCache();
-		_bindEvents();
-		_makeSubscription();
-		
+		_getMenuJSon();
 	}
 
-	var _makeSubscription = function(){
-		wageCalculated = pubSub.subscribe('wageCalculated', function( obj ){
-			
-			var x = obj.x;
-			var y = obj.y;
-			var multiplier = obj.multiplier;
+	var _getMenuJSon = function(){
 
-			console.log( (x + y) * multiplier );
-		})
+		$.ajax({
+			type:'GET',
+			url:'getMenuValues.php',
+			dataType: 'json',
+			success: function( data ){
+
+				menuData = data;
+				_loadTemplate();
+			},
+			error: function(/*jqXHR, exception"*/ts){
+				$('#sendInfo').html("Error send" + ts.responseText);
+			}		
+		});
 	}
-	
-	var _domCache = function(){
-		
-		$myBtn = $('.myBtn');
-		$workHoursInput = $('#workHour');
-		$eurPerHourInput = $('#eurPerHour');
-		$resultArea = $('#result');
-		
-	}
-	
-	var _bindEvents = function(){
-		
-		$myBtn.click( function(){
-			
-			_calculateNetWage();
-			
+
+	var _loadTemplate = function(){
+
+		$.get( 'js/templates/templates.mst', function( templ ) {
+			templates = templ;
+			_render(  );
 		} );
 
-
-		$( document ).keypress( function( e ){
-			/**
-			*ENTER button
-			*/
-			if( e.which == 13 ){
-				$myBtn.trigger('click');
-			}
-
-		} )
-		
 	}
 	
-	var _render = function(){
+	var _render = function(  ){
 		
-		$resultArea.text( netWage );
-		pubSub.publish('wageCalculated', {
-			x: 5,
-			y: 10,
-			multiplier: 10
-		});
+		_renderSpecific( 'batida' );
+		_renderSpecific( 'delfin' );
+		_renderSpecific( 'ruza' );
+		_renderSpecific( 'bazant' );
+		
+	}
 
-		pubSub.publish('wageCalculated', {
-			x: 5,
-			y: 5,
-			multiplier: 10
-		});
-		
+	var _renderSpecific = function( name ){
+
+		var template = $( templates ).filter( '#' + name + "Tmplt" ).html();
+		var templateData = {};
+		templateData[ name ] = menuData[ name ];
+
+		var render = Mustache.render(template, templateData);
+
+		$('#' + name).append(render);
+
 	}
 	
-	var _calculateNetWage = function(){
-		
-		var hours = $workHoursInput.val();
-		var eurPerHour = $eurPerHourInput.val();
-		var grossWage;
-		var levies;
-		var tax;
-		
-		if( hours < 0 || eurPerHour < 0 )
-			return;
-		
-		grossWage = hours * eurPerHour;
-		levies = ( grossWage - 200 ) * 0.07;
-		
-		if( levies < 0 )
-			levies = 0;
-			
-		tax = ( grossWage - 316.94 - levies ) * 0.19;
-		
-		if( tax < 0 )
-			tax = 0;
-		/**
-		* 2 decimal places
-		*/
-		netWage = (grossWage - levies - tax).toFixed( 2 );
-		
-		_render();
-	}
-	
-	return{
+	return {
 		init: init
 	}
-	
 })();
 
 
 $( document ).ready( function(){
-	netWageCalculator.init();
+	HungryGuy.init();
 } );
 

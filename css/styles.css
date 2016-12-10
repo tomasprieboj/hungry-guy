@@ -4,79 +4,31 @@ html, body{
 	background: #1b1c1f;
     color: #FFF;
 }
-.container{
-	height: 100%;
+
+.menuWrapper{
+    position: relative;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-.container .myForm{
-    border-radius: 0;
+.menuWrapper .menuElem{
+    position: relative;
+    display: block;
+    width: 100%;
+    text-align: justify;
     margin-top: 10px;
-    height: 60px;
-    font-size: 35px;
-    font-family: monospace;
-}
-.calculatorWrapper{
-	position: relative;
-    width: 500px;
-    height: 80%;
-    min-height: 500px;
-    left: 50%;
-    top: 20%;
-    transform: translate(-50%, -20%);
-    background: #2a2a2a;
-    padding-left: 10px;
-    padding-right: 10px;
-    color: #dfdfdf;
 
 }
 
-.calculatorWrapper .nameHead{
-    color: #b90000;
-    font-family: monospace;
-    font-size: 25px;
-    width: 100%;
-    font-weight: bold; 
-    text-align: center;
-}
+/*.menuWrapper .menuElem .menuItemHead{
 
-.resultOutputWrapper{
-	position: absolute;
-    font-size: 100px;
-    text-align: center;
-    width: 100%;
-    top: 50%;
-    transform: translateY( -50% );
-}
+}*/
 
-.resultOutputWrapper .eurSign{
-	color: gold;
-}
+.menuWrapper .menuElem .imgSmall{
 
-.btnWrapper{
-    position: absolute;
-	width: 90%;
-	height:50px;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX( -50% );
-  
-}
-
-.btnWrapper .myBtn{
-    width: 100%;
-    height: 50px;
-    text-align: center;
-    font-size: 30px;
-    font-family: monospace;
-    background: #403c3c;
-    transition: background 0.2s;
-
-}
-
-.btnWrapper .myBtn:hover{
-    cursor: pointer;
-    background: #5f5b5b;
-    transition: background 0.2s;
+    max-width: 150px; /* you can use % */
+    height: auto;
 }
 
 @media only screen and (max-width: 768px) {
@@ -84,13 +36,5 @@ html, body{
         margin: 0;
         padding: 0;
     }
-    .calculatorWrapper {
-        width: 100%;
-        height: 100%;
-    }
-
-    .resultOutputWrapper{
-        font-size: 50px;
-    }
-    
+   
 }

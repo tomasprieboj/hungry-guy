@@ -61,6 +61,7 @@ $bazantContent = $extractor->getBazantMenu( 'http://www.uzlatehobazanta.sk/denne
 	
 	<!-- Latest compiled JavaScript -->
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script type="text/javascript" scr="js/mustache/mustache.min.js"></script>
 	<script type="text/javascript" src="js/pubSub.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 </body>

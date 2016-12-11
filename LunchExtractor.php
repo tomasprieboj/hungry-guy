@@ -71,8 +71,6 @@ final class LunchExtractor{
 		$menuArr = array();
 		$isReadyToExtract = false;
 		$currentDayMonth = date("j.m.");
-		////////////////////////
-		$currentDayMonth = "5.12.";
 
 		$dom = self::getPageContent( $url );
 		$tBody = $dom->getElementsByTagName( 'tbody' )->item(0);
@@ -117,9 +115,6 @@ final class LunchExtractor{
 		$menuArr = array();
 		$isReadyToExtract = false;
 		$currentDayMonth = date("j.m.Y");
-
-		//////////////////////////
-		$currentDayMonth = "13.12.2016";
 
 		$dom = self::getPageContent( $url );
 		/*
@@ -218,8 +213,6 @@ final class LunchExtractor{
 		$isCurrentDay = false;
 		$counter = 0;
 		$currentDayMonth = date("d.M Y");
-
-		$currentDayMonth = "06.Dec 2016";
 		/*
 		rawArr contains html tags
 		array should contain 2 values
@@ -446,7 +439,7 @@ final class LunchExtractor{
 
 		return array(
 			"name" => $menuItemArr[0],
-			"price" => $menuItemArr[1]
+			"price" => $menuItemArr[1] . "€"
 		);
 	}
 

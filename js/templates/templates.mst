@@ -3,7 +3,7 @@
         <img src='./images/batidaText.png' alt='batida restaurant text' class="imgSmall">
     </div>
     {{#batida}}
-            <div class="menuItem">{{name}}<span class="price">{{price}}</span></div>
+            <div class="menuItem">{{name}} <span class="price">{{price}}</span></div>
     {{/batida}}
 </script>
 
@@ -11,18 +11,18 @@
     <div class="menuItemHead">
         <img src='./images/delfinLogo.png' alt='delfin restaurant logo'>
     </div>
-    {{#ruza}}
-        <div class="menuItem">{{name}}<span class="price">{{price}}</span></div>
-    {{/ruza}}
+    {{#delfin}}
+        <div class="menuItem">{{name}} <span class="price">{{price}}</span></div>
+    {{/delfin}}
 </script>
 
 <script id="ruzaTmplt" type="text/html">
     <div class="menuItemHead">
         <img src='./images/ruzaLogo.png' alt='ruza restaurant logo'>
     </div>
-    {{#delfin}}
-        <div class="menuItem">{{name}}<span class="price">{{price}}</span></div>
-    {{/delfin}}
+    {{#ruza}}
+        <div class="menuItem">{{name}} <span class="price">{{price}}</span></div>
+    {{/ruza}}
 </script>
 
 <script id="bazantTmplt" type="text/html">
@@ -30,6 +30,6 @@
         <img src='./images/bazantLogo.png' alt='bazant restaurant logo'>
     </div>
     {{#bazant}}
-        <div class="menuItem">{{name}}<span class="price">{{price}}</span></div>
+        <div class="menuItem">{{name}} <span class="price">{{price}}</span></div>
     {{/bazant}}
 </script>

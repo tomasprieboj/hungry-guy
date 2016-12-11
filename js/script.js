@@ -21,7 +21,7 @@ var HungryGuy = (function(){
 				_loadTemplate();
 			},
 			error: function(/*jqXHR, exception"*/ts){
-				$('#sendInfo').html("Error send" + ts.responseText);
+				console.log( "Error send" + ts.responseText );
 			}		
 		});
 	}
@@ -30,17 +30,17 @@ var HungryGuy = (function(){
 
 		$.get( 'js/templates/templates.mst', function( templ ) {
 			templates = templ;
-			_render(  );
+			_render();
 		} );
 
 	}
 	
 	var _render = function(  ){
 		
-		_renderSpecific( 'batida' );
-		_renderSpecific( 'delfin' );
-		_renderSpecific( 'ruza' );
-		_renderSpecific( 'bazant' );
+		var keys = Object.keys( menuData );
+		keys.forEach( function( key ) {
+			_renderSpecific( key );
+		}, this );
 		
 	}
 
@@ -49,9 +49,8 @@ var HungryGuy = (function(){
 		var template = $( templates ).filter( '#' + name + "Tmplt" ).html();
 		var templateData = {};
 		templateData[ name ] = menuData[ name ];
-
+	
 		var render = Mustache.render(template, templateData);
-
 		$('#' + name).append(render);
 
 	}

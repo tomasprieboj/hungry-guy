@@ -71,6 +71,8 @@ final class LunchExtractor{
 		$menuArr = array();
 		$isReadyToExtract = false;
 		$currentDayMonth = date("j.m.");
+		////////////////////////
+		$currentDayMonth = "5.12.";
 
 		$dom = self::getPageContent( $url );
 		$tBody = $dom->getElementsByTagName( 'tbody' )->item(0);
@@ -116,6 +118,9 @@ final class LunchExtractor{
 		$isReadyToExtract = false;
 		$currentDayMonth = date("j.m.Y");
 
+		//////////////////////////
+		$currentDayMonth = "13.12.2016";
+
 		$dom = self::getPageContent( $url );
 		/*
 		we need elements by its class so we use XPath
@@ -134,7 +139,7 @@ final class LunchExtractor{
 			/*
 			we found our day
 			*/
-			if( strcmp( $headArr[1], $currentDayMonth ) === 0 ){
+			if( strcmp( $menuDayMonth, $currentDayMonth ) === 0 ){
 				$ps = $node->getElementsByTagName('p');
 				/*
 				6th is price
@@ -213,6 +218,8 @@ final class LunchExtractor{
 		$isCurrentDay = false;
 		$counter = 0;
 		$currentDayMonth = date("d.M Y");
+
+		$currentDayMonth = "06.Dec 2016";
 		/*
 		rawArr contains html tags
 		array should contain 2 values

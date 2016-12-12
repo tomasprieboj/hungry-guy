@@ -4,9 +4,37 @@ var HungryGuy = (function(){
 
 	var menuData;
 	var templates;
+	var $body;
 
 	var init = function(){
+		
+		_domCache();
+		_bindEvents();
 		_getMenuJSon();
+	}
+
+	var _domCache = function(){
+
+		$body = $("body");
+	}
+
+	var _bindEvents = function(){
+
+		_bindLoadingAnimation();
+	}
+
+	var _bindLoadingAnimation = function(){
+
+		$(document).on({
+			ajaxStart: function() { 
+				console.log("start");
+				$body.addClass("loading");
+			},
+			ajaxStop: function() { 
+				console.log("stop");
+				$body.removeClass("loading"); 
+			}    
+		});
 	}
 
 	var _getMenuJSon = function(){
@@ -16,7 +44,6 @@ var HungryGuy = (function(){
 			url:'getMenuValues.php',
 			dataType: 'json',
 			success: function( data ){
-
 				menuData = data;
 				_loadTemplate();
 			},

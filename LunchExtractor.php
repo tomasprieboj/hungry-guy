@@ -213,7 +213,6 @@ final class LunchExtractor{
 		$isCurrentDay = false;
 		$counter = 0;
 		$currentDayMonth = date("d.M Y");
-		$currentDayMonth = "12.Dec 2016";
 		/*
 		rawArr contains html tags
 		array should contain 2 values
@@ -275,20 +274,10 @@ final class LunchExtractor{
 			are separated by TAB character ffs
 			*/
 			$spaceSplitArr = explode( '	',  $srippedElem );
-			$name = $spaceSplitArr[0];
-			$price;
-			/*
-			sometimes int is not TAB
-			*/
-			if( count($spaceSplitArr) > 1){
-				$price = $spaceSplitArr[1];
-			}else{
-				$price = "";
-			}
 
 			$retArr[] = array(
-				"name" => $name,
-				"price" => $price
+				"name" => $spaceSplitArr[0],
+				"price" => $spaceSplitArr[1]
 			);
 		}
 

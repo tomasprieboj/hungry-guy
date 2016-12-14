@@ -274,10 +274,20 @@ final class LunchExtractor{
 			are separated by TAB character ffs
 			*/
 			$spaceSplitArr = explode( '	',  $srippedElem );
+			$name = $spaceSplitArr[0];
+			$price;
+			/*
+			sometimes int is not TAB
+			*/
+			if( count($spaceSplitArr) > 1){
+				$price = $spaceSplitArr[1];
+			}else{
+				$price = "";
+			}
 
 			$retArr[] = array(
-				"name" => $spaceSplitArr[0],
-				"price" => $spaceSplitArr[1]
+				"name" => $name,
+				"price" => $price
 			);
 		}
 

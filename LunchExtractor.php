@@ -43,27 +43,6 @@ final class LunchExtractor{
 	}
 
 	/*
-	!!! this function may not be needed
-	*/
-	/*private function correctShortDate( $dateStr ){
-		
-		if( strlen( $dateStr ) > 5 || strlen( $dateStr )  <= 2)
-			return $dateStr;
-
-		$dateArr = explode( '.', $dateStr );
-		
-		//if days are short for example: 1 => 01
-		
-		if( strlen($dateArr[0]) < 2  )
-			$dateArr[0] = "0" . $dateArr[0];
-		if( strlen($dateArr[1]) < 2 )
-			$dateArr[1] = "0" . $dateArr[1];
-
-		return implode( '.', $dateArr);
-	}*/
-
-
-	/*
 	need to correct dates leading zero
 	*/
 	public function getBatidaMenu( $url ){

@@ -49,8 +49,8 @@ final class LunchExtractor{
 
 		$menuArr = array();
 		$isReadyToExtract = false;
-		$currentDayMonth = date("j.m.");
-
+		$currentDayMonth = date("j.n.");
+		
 		$dom = self::getPageContent( $url );
 		$tBody = $dom->getElementsByTagName( 'tbody' )->item(0);
 		$trs = $tBody->getElementsByTagName( 'tr' );
@@ -93,7 +93,7 @@ final class LunchExtractor{
 
 		$menuArr = array();
 		$isReadyToExtract = false;
-		$currentDayMonth = date("j.m.Y");
+		$currentDayMonth = date("j.n.Y");
 
 		$dom = self::getPageContent( $url );
 		/*
@@ -353,7 +353,7 @@ final class LunchExtractor{
 	private function getCorrectDayArr( $divsChilds ){
 
 		$retArr = array();
-		$currentDayMonth = date("j.m.Y");
+		$currentDayMonth = date("j.n.Y");
 		$soupString = "";
 		$soupStringcounter = 0;
 		$correctArrElem;

@@ -428,7 +428,7 @@ final class LunchExtractor{
 
 		return array(
 			"name" => $menuItemArr[0],
-			"price" => $menuItemArr[1] . "€"
+			"price" => $menuItemArr[1]
 		);
 	}
 

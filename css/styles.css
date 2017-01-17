@@ -10,7 +10,7 @@ html, body{
     position: relative;
     width: 80%;
     left: 50%;
-    top: 50px;
+    top: 40px;
     transform: translateX(-50%);
     background: #1b1c1f;
     -webkit-box-shadow: 0px 4px 21px 0px rgba(0,0,0,0.75);
